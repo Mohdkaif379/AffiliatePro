@@ -1,0 +1,1 @@
+- [x] Edit app/Http/Controllers/Offers/OfferController.php to replace 'ip_address' => request()->server('SERVER_ADDR') with 'ip_address' => $request->ip() in the index, show, redirect, and click methods (4 instances).
