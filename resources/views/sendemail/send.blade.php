@@ -40,6 +40,7 @@
             <label class="text-gray-300">Select Recipients</label>
             <select id="emailSelect" name="emails" class="w-full bg-gray-800 text-white border border-gray-700 rounded px-4 py-2">
                 <option value="">Select an Email...</option>
+                <option value="__select_all__">Select All Emails</option>
                 @foreach($users as $user)
                 <option value="{{ $user->email }}">{{ $user->email }}</option>
                 @endforeach
@@ -50,7 +51,7 @@
         <!-- Message -->
         <div class="mb-4">
             <label class="text-gray-300">Email Message</label>
-            <textarea name="message" rows="6" readonly
+            <textarea name="message" rows="8"
                 class="w-full bg-gray-800 text-white border border-gray-700 rounded px-4 py-2">
 I am {{ auth()->user()->full_name }}, and I hope this message finds you well.
 We are delighted to inform you that a special offer has been created exclusively for you. This offer has been designed to provide you with maximum value and benefits, and we encourage you to take advantage of it at your earliest convenience.
@@ -75,20 +76,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     emailSelect.addEventListener('change', function() {
         const selectedEmail = this.value;
+        if (selectedEmail === '__select_all__') {
+            selectAllEmails();
+            this.value = ''; // Reset dropdown
+            return;
+        }
+
         if (selectedEmail && !isEmailAlreadySelected(selectedEmail)) {
             addSelectedEmail(selectedEmail);
             this.value = ''; // Reset dropdown
         }
     });
 
-    submitBtn.addEventListener('click', function(e) {
-        const hiddenInputs = form.querySelectorAll('input[name="recipient_emails[]"]');
-        if (hiddenInputs.length === 0) {
-            e.preventDefault();
-            alert('Please select at least one recipient email.');
-            return false;
-        }
-    });
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(e) {
+            const hiddenInputs = form.querySelectorAll('input[name="recipient_emails[]"]');
+            if (hiddenInputs.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one recipient email.');
+                return false;
+            }
+        });
+    }
 
     function isEmailAlreadySelected(email) {
         const hiddenInputs = form.querySelectorAll('input[name="recipient_emails[]"]');
@@ -108,6 +117,19 @@ document.addEventListener('DOMContentLoaded', function() {
         emailDiv.className = 'inline-block bg-yellow-600 text-white px-2 py-1 rounded mr-2 mb-2';
         emailDiv.innerHTML = `${email} <span class="cursor-pointer ml-1" onclick="removeEmail(this, '${email}')">&times;</span>`;
         selectedEmailsDiv.appendChild(emailDiv);
+    }
+
+    function selectAllEmails() {
+        Array.from(emailSelect.options).forEach(option => {
+            const email = option.value;
+            if (!email || email === '__select_all__') {
+                return;
+            }
+
+            if (!isEmailAlreadySelected(email)) {
+                addSelectedEmail(email);
+            }
+        });
     }
 
     window.removeEmail = function(span, email) {
