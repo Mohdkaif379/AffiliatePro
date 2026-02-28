@@ -151,6 +151,9 @@
     <!-- Footer -->
     @include('layout.footer')
 
+    {{-- Page specific scripts --}}
+    @yield('scripts')
+
 </body>
 
 </html>

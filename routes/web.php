@@ -117,6 +117,7 @@ Route::get('/accountant/index', [AccountantController::class, 'index'])->name('a
 Route::get('/accountant/billing', [AccountantController::class, 'billingForm'])->name('accountant.billing');
 Route::post('/accountant/invoice/generate', [AccountantController::class, 'generateInvoiceFromForm'])->name('accountant.invoice.generate');
 Route::get('/accountant/invoice/{user}', [AccountantController::class, 'generateInvoice'])->name('accountant.invoice');
+Route::get('/accountant/invoice/{user}/pdf-browser', [AccountantController::class, 'generateInvoiceBrowsershot'])->name('accountant.invoice.browsershot');
 
 Route::get('/advertiser/report', [AdvertiserReportController::class, 'getClickCount'])
      ->name('advertiser.report');
