@@ -8,7 +8,7 @@
                 border-b border-yellow-600/40 pb-4">
         <h1 class="flex items-center gap-2 text-3xl font-extrabold text-yellow-500 tracking-wide">
             <i class="fas fa-file-invoice-dollar text-yellow-400 text-3xl"></i>
-            Accountants List
+            Invoice Users
         </h1>
 
     </div>
@@ -26,6 +26,7 @@
                     <th class="px-4 py-4">Role</th>
                     <th class="px-4 py-4">Created At</th>
                     <th class="px-4 py-4 text-center">Status</th>
+                    <th class="px-4 py-4 text-center">Action</th>
                 </tr>
             </thead>
 
@@ -58,13 +59,20 @@
                             {{ $accountant->status }}
                         </span>
                     </td>
+
+                    <td class="px-4 py-3 text-center">
+                        <a href="{{ route('accountant.invoice', $accountant->id) }}"
+                           class="inline-flex items-center px-3 py-1 rounded-lg bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-semibold transition">
+                            Generate Invoice
+                        </a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="py-10 text-center text-yellow-400">
-                        🚫 No accountants found.
+                    <td colspan="7" class="py-10 text-center text-yellow-400">
+                        No users found.
                         <div class="mt-2 text-sm text-gray-400">
-                            accountants will appear here.
+                            Billable users will appear here.
                         </div>
                     </td>
                 </tr>

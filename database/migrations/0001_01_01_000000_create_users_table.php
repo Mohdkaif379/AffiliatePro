@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('password');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->unsignedBigInteger('role')->default(2); // default role_id = 2 (user)
-            $table->foreign('role')->references('id')->on('roles')->cascadeOnDelete();
             $table->timestamps(); 
         });
 

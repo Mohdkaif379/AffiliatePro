@@ -114,6 +114,9 @@ Route::get('/hr/index', [HRController::class, 'index'])->name('hr.index');
 Route::get('/employees/index', [EmployeeController::class, 'index'])->name('employees.index');
 
 Route::get('/accountant/index', [AccountantController::class, 'index'])->name('accountant.index');
+Route::get('/accountant/billing', [AccountantController::class, 'billingForm'])->name('accountant.billing');
+Route::post('/accountant/invoice/generate', [AccountantController::class, 'generateInvoiceFromForm'])->name('accountant.invoice.generate');
+Route::get('/accountant/invoice/{user}', [AccountantController::class, 'generateInvoice'])->name('accountant.invoice');
 
 Route::get('/advertiser/report', [AdvertiserReportController::class, 'getClickCount'])
      ->name('advertiser.report');

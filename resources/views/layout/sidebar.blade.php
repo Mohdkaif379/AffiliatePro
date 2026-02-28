@@ -357,7 +357,7 @@ $accountsPerms = $permissions['accounts'] ?? [];
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700">
+                <a href="{{ route('accountant.billing') }}" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-700">
                     <i class="fas fa-credit-card w-4"></i>Billing Account
                 </a>
             </li>
