@@ -152,16 +152,22 @@ class AccountantController extends Controller
         $toDate = $validated['to_date'] ?? null;
         $asPdf = (bool) ($validated['pdf'] ?? false);
 
+        // Generate consistent invoice number based on user ID and date range
+        $dateHash = now()->format('Ymd');
+        $invoiceNumber = 'INV-' . $user->id . '-' . $dateHash . '-' . strtoupper(substr(md5($user->id . ($fromDate ?? '') . ($toDate ?? '')), 0, 3));
+
+        // Fetch clicks, views, and conversions for this user only
         $lineItemsQuery = OfferClick::query()
             ->join('offers', 'offers.id', '=', 'offer_clicks.offer_id')
             ->where('offer_clicks.user_id', $user->id)
-            ->where('offer_clicks.type', 'click')
             ->selectRaw('
                 offers.id as offer_id,
                 offers.offer_title,
                 COALESCE(offers.advertiser_price, 0) as advertiser_rate,
                 COALESCE(offers.affiliate_price, 0) as affiliate_rate,
-                COUNT(*) as total_clicks
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "click" THEN 1 ELSE 0 END), 0) as total_clicks,
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "conversion" THEN 1 ELSE 0 END), 0) as total_conversions,
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "view" THEN 1 ELSE 0 END), 0) as total_views
             ')
             ->groupBy('offers.id', 'offers.offer_title', 'offers.advertiser_price', 'offers.affiliate_price')
             ->orderBy('offers.offer_title');
@@ -188,12 +194,12 @@ class AccountantController extends Controller
 
         $invoiceSummary = [
             'total_clicks' => $lineItems->sum('total_clicks'),
+            'total_conversions' => $lineItems->sum('total_conversions'),
+            'total_views' => $lineItems->sum('total_views'),
             'advertiser_total' => $lineItems->sum('advertiser_amount'),
             'affiliate_total' => $lineItems->sum('affiliate_amount'),
             'platform_margin_total' => $lineItems->sum('platform_margin'),
         ];
-
-        $invoiceNumber = 'INV-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
 
         $invoiceData = [
             'invoiceUser' => $user,
@@ -227,16 +233,22 @@ class AccountantController extends Controller
         $fromDate = $validated['from_date'] ?? null;
         $toDate = $validated['to_date'] ?? null;
 
+        // Generate consistent invoice number based on user ID and date range
+        $dateHash = now()->format('Ymd');
+        $invoiceNumber = 'INV-' . $user->id . '-' . $dateHash . '-' . strtoupper(substr(md5($user->id . ($fromDate ?? '') . ($toDate ?? '')), 0, 3));
+
+        // Fetch clicks, views, and conversions for this user only
         $lineItemsQuery = OfferClick::query()
             ->join('offers', 'offers.id', '=', 'offer_clicks.offer_id')
             ->where('offer_clicks.user_id', $user->id)
-            ->where('offer_clicks.type', 'click')
             ->selectRaw('
                 offers.id as offer_id,
                 offers.offer_title,
                 COALESCE(offers.advertiser_price, 0) as advertiser_rate,
                 COALESCE(offers.affiliate_price, 0) as affiliate_rate,
-                COUNT(*) as total_clicks
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "click" THEN 1 ELSE 0 END), 0) as total_clicks,
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "conversion" THEN 1 ELSE 0 END), 0) as total_conversions,
+                COALESCE(SUM(CASE WHEN offer_clicks.type = "view" THEN 1 ELSE 0 END), 0) as total_views
             ')
             ->groupBy('offers.id', 'offers.offer_title', 'offers.advertiser_price', 'offers.affiliate_price')
             ->orderBy('offers.offer_title');
@@ -263,12 +275,12 @@ class AccountantController extends Controller
 
         $invoiceSummary = [
             'total_clicks' => $lineItems->sum('total_clicks'),
+            'total_conversions' => $lineItems->sum('total_conversions'),
+            'total_views' => $lineItems->sum('total_views'),
             'advertiser_total' => $lineItems->sum('advertiser_amount'),
             'affiliate_total' => $lineItems->sum('affiliate_amount'),
             'platform_margin_total' => $lineItems->sum('platform_margin'),
         ];
-
-        $invoiceNumber = 'INV-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
 
         $invoiceData = [
             'invoiceUser' => $user,
