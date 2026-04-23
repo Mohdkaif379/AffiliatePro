@@ -10,7 +10,13 @@
         <i class="fas fa-bars"></i>
     </button>
 
-    <div class="ml-4 hidden flex-1 items-center md:flex">
+    <div class="ml-4 hidden flex-1 items-center gap-4 md:flex">
+        <div class="shrink-0">
+            <span class="text-lg font-bold tracking-wide text-slate-900 lg:text-xl">
+                Affiliate Programme
+            </span>
+        </div>
+
         <div class="relative w-full max-w-md">
             <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400">
                 <i class="fas fa-search text-sm"></i>
