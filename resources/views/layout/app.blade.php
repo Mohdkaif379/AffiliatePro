@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-        #sidebarMenu::-webkit-scrollbar {
+        ::-webkit-scrollbar {
             display: none;
         }
         #sidebarMenu {
@@ -116,6 +116,10 @@
         const desktopToggleBtn = document.getElementById('sidebarToggle');
         const desktopToggleIcon = document.getElementById('sidebarToggleIcon');
         const mobileToggleBtn = document.getElementById('sidebarMobileToggle');
+        const fullscreenToggleBtn = document.getElementById('fullscreenToggle');
+        const fullscreenToggleIcon = document.getElementById('fullscreenToggleIcon');
+        const indiaTimeDisplay = document.getElementById('indiaTimeDisplay');
+        const fullscreenPreferenceKey = 'affiliate_programme_fullscreen_enabled';
 
         function setSidebarToggleIcon() {
             if (!desktopToggleIcon) return;
@@ -125,6 +129,73 @@
                 sidebar.dataset.collapsed = isCollapsed ? 'true' : 'false';
             }
             document.body.dataset.sidebarCollapsed = isCollapsed ? 'true' : 'false';
+        }
+
+        function setFullscreenIcon() {
+            if (!fullscreenToggleIcon) return;
+            const isFullscreen = !!document.fullscreenElement;
+            fullscreenToggleIcon.classList.toggle('fa-expand', !isFullscreen);
+            fullscreenToggleIcon.classList.toggle('fa-compress', isFullscreen);
+        }
+
+        function setFullscreenPreference(enabled) {
+            try {
+                localStorage.setItem(fullscreenPreferenceKey, enabled ? '1' : '0');
+            } catch (error) {
+                console.error('Could not save fullscreen preference:', error);
+            }
+        }
+
+        function shouldKeepFullscreen() {
+            try {
+                return localStorage.getItem(fullscreenPreferenceKey) === '1';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function restoreFullscreenPreference() {
+            if (!shouldKeepFullscreen() || document.fullscreenElement) {
+                return;
+            }
+
+            try {
+                await document.documentElement.requestFullscreen();
+            } catch (error) {
+                console.warn('Fullscreen restore blocked by the browser:', error);
+            }
+        }
+
+        async function toggleFullscreen() {
+            try {
+                if (!document.fullscreenElement) {
+                    await document.documentElement.requestFullscreen();
+                    setFullscreenPreference(true);
+                } else {
+                    await document.exitFullscreen();
+                    setFullscreenPreference(false);
+                }
+            } catch (error) {
+                console.error('Fullscreen toggle failed:', error);
+            }
+        }
+
+        function updateIndiaTime() {
+            if (!indiaTimeDisplay) return;
+
+            const formatter = new Intl.DateTimeFormat('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+                weekday: 'short',
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            });
+
+            indiaTimeDisplay.textContent = formatter.format(new Date()).replace(/\b(am|pm)\b/i, match => match.toUpperCase());
         }
 
         function updateLayout() {
@@ -170,6 +241,13 @@
         window.addEventListener('resize', updateLayout);
         updateLayout(); // Initial call
         setSidebarToggleIcon();
+        setFullscreenIcon();
+        updateIndiaTime();
+        restoreFullscreenPreference();
+
+        setInterval(updateIndiaTime, 1000);
+
+        window.addEventListener('pageshow', restoreFullscreenPreference);
 
         if (desktopToggleBtn) {
             desktopToggleBtn.addEventListener('click', function() {
@@ -227,6 +305,17 @@
                 sidebar.classList.remove('w-24');
                 sidebar.classList.add('w-64');
                 sidebar.classList.toggle('hidden');
+            });
+        }
+
+        if (fullscreenToggleBtn) {
+            fullscreenToggleBtn.addEventListener('click', toggleFullscreen);
+            document.addEventListener('fullscreenchange', function() {
+                setFullscreenIcon();
+
+                if (!document.fullscreenElement && shouldKeepFullscreen()) {
+                    setFullscreenPreference(false);
+                }
             });
         }
 

@@ -12,7 +12,7 @@
     data-collapsed="false"
     class="fixed left-0 top-0 bottom-0 z-30 hidden h-screen w-64 overflow-hidden border-r border-slate-200 bg-white text-slate-800 shadow-xl transition-all duration-300 md:flex md:flex-col">
 
-    <div class="sidebar-brand relative flex h-24 flex-none items-center justify-center border-b border-slate-200 bg-gradient-to-b from-white to-slate-50 px-4">
+    <div class="sidebar-brand relative flex h-20 flex-none items-center justify-center border-b border-slate-200 bg-gradient-to-b from-white to-slate-50 px-4">
         <img
             id="sidebarLogo"
             src="{{ asset('images/logo.png') }}"

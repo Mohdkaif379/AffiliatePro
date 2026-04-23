@@ -1,6 +1,6 @@
 <header
     id="header"
-    class="fixed left-64 top-0 right-0 z-20 flex h-24 items-center justify-between border-b border-slate-200 bg-white px-4 text-slate-900 shadow-sm transition-all duration-300 md:px-6">
+    class="fixed left-64 top-0 right-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white px-4 text-slate-900 shadow-sm transition-all duration-300 md:px-6">
 
     <button
         id="sidebarMobileToggle"
@@ -15,6 +15,9 @@
             <span class="text-lg font-bold tracking-wide text-slate-900 lg:text-xl">
                 Affiliate Programme
             </span>
+            <div id="indiaTimeDisplay" class="mt-1 text-xs font-medium text-slate-500">
+                Loading India time...
+            </div>
         </div>
 
         <div class="relative w-full max-w-md">
@@ -30,6 +33,15 @@
     </div>
 
     <div class="ml-auto relative flex items-center gap-3">
+        <button
+            id="fullscreenToggle"
+            type="button"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100"
+            aria-label="Toggle fullscreen"
+            title="Fullscreen">
+            <i id="fullscreenToggleIcon" class="fas fa-expand"></i>
+        </button>
+
         <button
             type="button"
             class="relative flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100"
