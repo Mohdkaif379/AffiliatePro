@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #211d1d;
-            --secondary-color: #363538;
-            --accent-color: #f72585;
-            --light-bg: #f8f9fa;
-            --dark-text: #212529;
-            --light-text: #6c757d;
+            --primary-color: #0f172a;
+            --secondary-color: #334155;
+            --accent-color: #2563eb;
+            --light-bg: #f8fafc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
         }
 
         * {
@@ -27,7 +27,10 @@
         }
 
         body {
-            background-color: #f5f7ff;
+            background:
+                radial-gradient(circle at top left, rgba(15, 23, 42, 0.06), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.08), transparent 28%),
+                #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -42,14 +45,15 @@
             min-height: 500px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
             overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
 
         /* Left side - Logo & Affiliate Info */
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
             padding: 20px;
             display: flex;
@@ -90,13 +94,13 @@
         .logo {
             width: 120px;
             height: 120px;
-            background: white;
+            background: rgba(255, 255, 255, 0.96);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
         }
 
         .logo i {
@@ -171,6 +175,33 @@
             position: relative;
         }
 
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .password-toggle:focus {
+            outline: none;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 70px;
+        }
+
         .form-label {
             font-weight: 600;
             color: var(--dark-text);
@@ -180,23 +211,29 @@
         }
 
         .form-control {
-            padding: 10px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 10px 12px 10px 40px;
+            border: none;
+            border-bottom: 2px solid #cbd5e1;
+            border-radius: 0;
             font-size: 15px;
             transition: all 0.3s;
+            background: transparent;
+            color: #0f172a;
         }
 
         .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+            border-bottom-color: #0f172a;
+            box-shadow: none;
+            background: transparent;
         }
 
         .input-icon {
             position: absolute;
-            right: 15px;
-            top: 42px;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--light-text);
+            pointer-events: none;
         }
 
         .remember-forgot {
@@ -237,7 +274,7 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 7px 18px rgba(15, 23, 42, 0.22);
         }
 
         .register-link {
@@ -323,11 +360,11 @@
 </head>
 
 <body class="">
-    <div class="login-container border-4 border-yellow-700">
+    <div class="login-container">
         <!-- Left side: Logo & Affiliate Info -->
-        <div class=" bg-gray-900 p-4 text-white ">
+        <div class="login-left p-4 text-white md:p-6">
             <div class="logo-container">
-                <div class="logo border-2 border-yellow-800">
+                <div class="logo border border-slate-200">
                     <img src="{{ asset('images/logo.png') }}" alt="Affiliate Program Logo" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <h1 class="brand-name">AffiliatePro</h1>
@@ -374,14 +411,14 @@
         </div>
 
         <!-- Right side: Login Form -->
-        <div class="login-right bg-gray-900">
+        <div class="login-right bg-white">
             <div class="login-header">
-                <h2 class="text-white font-bold text-3xl p-1">Affiliate Login</h2>
-                <p class=" text-white">Access your affiliate dashboard to track earnings and performance</p>
+                <h2 class="p-1 text-3xl font-bold text-slate-900">Affiliate Login</h2>
+                <p class="text-slate-500">Access your affiliate dashboard to track earnings and performance</p>
             </div>
 
             @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger border border-rose-200 bg-rose-50 text-rose-700">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -393,30 +430,29 @@
             <form action="{{ route('login.post') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="email" class="text-white mb-1">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your affiliate email" required>
                     <div class="input-icon">
                         <i class="fas fa-envelope"></i>
                     </div>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="password" class="text-white mb-1">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                <div class="form-group password-wrapper">
                     <div class="input-icon">
                         <i class="fas fa-lock"></i>
                     </div>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                    <button type="button" class="password-toggle" id="passwordToggle">SHOW</button>
                 </div>
 
                 <div class="remember-forgot">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember">
-                        <label class="text-white" for="remember">Remember me</label>
+                        <input class="form-check-input" type="checkbox" id="remember" required>
+                        <label class="text-slate-600" for="remember">Remember me</label>
                     </div>
                     <a href="#" class="forgot-link">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="w-full text-center border-2 border-yellow-700 text-white font-bold bg-gray-900 px-6 py-2 rounded-xl">
+                <button type="submit" class="btn-login">
                     Login
                 </button>
 
@@ -433,6 +469,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
+            const passwordToggle = document.getElementById('passwordToggle');
 
             // Add focus effects
             [emailInput, passwordInput].forEach(input => {
@@ -443,6 +480,12 @@
                 input.addEventListener('blur', function() {
                     this.parentElement.querySelector('.input-icon').style.color = '#6c757d';
                 });
+            });
+
+            passwordToggle.addEventListener('click', function() {
+                const isHidden = passwordInput.type === 'password';
+                passwordInput.type = isHidden ? 'text' : 'password';
+                this.textContent = isHidden ? 'HIDE' : 'SHOW';
             });
 
             // Form submission animation

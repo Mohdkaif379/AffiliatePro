@@ -1,62 +1,81 @@
 @extends('layout.app')
 
 @section('content')
+<div class="min-h-screen bg-slate-50 px-4 py-10">
+    <div class="mx-auto w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,0.12)] sm:p-8">
+        <div class="mb-6 border-b border-slate-200 pb-5">
+            <h2 class="text-3xl font-bold text-slate-900">
+                Update Profile
+            </h2>
+            <p class="mt-2 text-sm text-slate-500">
+                Keep your account details up to date.
+            </p>
+        </div>
 
-<div class="min-h-screen bg-gray-900 flex items-center justify-center p-6">
-    <div class="w-full max-w-6xl border-4 border-yellow-600  p-8 bg-gradient-to-br from-gray-900 to-gray-800">
+        @if ($errors->any())
+            <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <ul class="list-disc space-y-1 pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <h2 class="text-3xl font-bold text-yellow-500 mb-8 flex items-center gap-2">
-            <i class="fas fa-user-edit"></i> Update Profile
-        </h2>
-
-        <form method="POST" action="{{route('update.profile')}}">
+        <form method="POST" action="{{ route('update.profile') }}">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                {{-- Full Name --}}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                    <label class="block text-white mb-2">Full Name</label>
-                    <input type="text" name="full_name"
-                        value="{{ auth()->user()->full_name ?? '' }}"
-                        class="w-full px-4 py-2 bg-white border-2 border-yellow-700  focus:outline-none">
+                    <label class="mb-2 block text-sm font-medium text-slate-700">Full Name</label>
+                    <input
+                        type="text"
+                        name="full_name"
+                        value="{{ old('full_name', auth()->user()->full_name ?? '') }}"
+                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+                    >
                 </div>
 
-                {{-- Company Name --}}
                 <div>
-                    <label class="block text-white mb-2">Company Name</label>
-                    <input type="text" name="company_name"
-                        value="{{ auth()->user()->company_name ?? '' }}"
-                        class="w-full px-4 py-2 bg-white border-2 border-yellow-700  focus:outline-none">
+                    <label class="mb-2 block text-sm font-medium text-slate-700">Company Name</label>
+                    <input
+                        type="text"
+                        name="company_name"
+                        value="{{ old('company_name', auth()->user()->company_name ?? '') }}"
+                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+                    >
                 </div>
 
-                {{-- Mobile Number --}}
                 <div>
-                    <label class="block text-white mb-2">Mobile Number</label>
-                    <input type="text" name="mobile_no"
-                        value="{{ auth()->user()->mobile_no ?? '' }}"
-                        class="w-full px-4 py-2 bg-white border-2 border-yellow-700  focus:outline-none">
+                    <label class="mb-2 block text-sm font-medium text-slate-700">Mobile Number</label>
+                    <input
+                        type="text"
+                        name="mobile_no"
+                        value="{{ old('mobile_no', auth()->user()->mobile_no ?? '') }}"
+                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+                    >
                 </div>
 
-                {{-- Email --}}
                 <div>
-                    <label class="block text-white mb-2">Email</label>
-                    <input type="email" name="email"
-                        value="{{ auth()->user()->email ?? '' }}"
-                        class="w-full px-4 py-2 bg-white border-2 border-yellow-700  focus:outline-none">
+                    <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ old('email', auth()->user()->email ?? '') }}"
+                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+                    >
                 </div>
-
             </div>
 
-            <div class="mt-8 text-right">
-                <button type="submit"
-                    class="bg-yellow-500 text-gray-900 font-bold px-8 py-3  hover:bg-yellow-400 transition">
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 hover:shadow-lg"
+                >
                     Update Profile
                 </button>
             </div>
-
         </form>
-
     </div>
 </div>
 

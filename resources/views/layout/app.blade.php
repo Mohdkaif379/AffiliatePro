@@ -10,18 +10,77 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-        /* Hide scrollbar for sidebar */
-        #sidebar::-webkit-scrollbar {
+        #sidebarMenu::-webkit-scrollbar {
             display: none;
         }
-        #sidebar {
+        #sidebarMenu {
             scrollbar-width: none; /* Firefox */
+        }
+
+        #sidebar[data-collapsed="true"] {
+            width: 6rem;
+        }
+
+        #sidebar[data-collapsed="true"] #sidebarLogo {
+            display: block;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        #sidebar[data-collapsed="true"] .sidebar-brand {
+            justify-content: space-between;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        #sidebar[data-collapsed="true"] .sidebar-label,
+        #sidebar[data-collapsed="true"] .sidebar-chevron,
+        #sidebar[data-collapsed="true"] .sidebar-dropdown {
+            display: none !important;
+        }
+
+        #sidebar[data-collapsed="true"] .sidebar-item {
+            justify-content: center;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        #sidebar[data-collapsed="true"] .sidebar-item > span:first-child {
+            gap: 0;
+        }
+
+        #sidebar[data-collapsed="true"] .sidebar-icon {
+            margin-right: 0;
+        }
+
+        body[data-sidebar-collapsed="true"] #sidebar {
+            width: 6rem !important;
+        }
+
+        body[data-sidebar-collapsed="true"] #header {
+            left: 6rem !important;
+        }
+
+        body[data-sidebar-collapsed="true"] #mainContent {
+            margin-left: 6rem !important;
+        }
+
+        body:not([data-sidebar-collapsed="true"]) #sidebar {
+            width: 16rem;
+        }
+
+        body:not([data-sidebar-collapsed="true"]) #header {
+            left: 16rem;
+        }
+
+        body:not([data-sidebar-collapsed="true"]) #mainContent {
+            margin-left: 16rem;
         }
     </style>
 
 </head>
 
-<body class="bg-gray-900">
+<body class="bg-slate-50 text-slate-900">
 
     <!-- Sidebar -->
     @include('layout.sidebar')
@@ -54,8 +113,19 @@
         const header = document.getElementById('header');
         const hrLine = document.getElementById('hrLine');
         const mainContent = document.getElementById('mainContent');
-        const logoText = document.getElementById('logoText');
-        const toggleBtn = document.getElementById('sidebarToggle');
+        const desktopToggleBtn = document.getElementById('sidebarToggle');
+        const desktopToggleIcon = document.getElementById('sidebarToggleIcon');
+        const mobileToggleBtn = document.getElementById('sidebarMobileToggle');
+
+        function setSidebarToggleIcon() {
+            if (!desktopToggleIcon) return;
+            desktopToggleIcon.classList.toggle('fa-angle-left', !isCollapsed);
+            desktopToggleIcon.classList.toggle('fa-angle-right', isCollapsed);
+            if (sidebar) {
+                sidebar.dataset.collapsed = isCollapsed ? 'true' : 'false';
+            }
+            document.body.dataset.sidebarCollapsed = isCollapsed ? 'true' : 'false';
+        }
 
         function updateLayout() {
             isMobile = window.innerWidth < 768;
@@ -87,65 +157,96 @@
                     mainContent.classList.remove('ml-0');
                     mainContent.classList.add('ml-64');
                 }
+
+                if (sidebar) {
+                    sidebar.classList.remove('w-16', 'w-24', 'w-64');
+                    sidebar.classList.add(isCollapsed ? 'w-24' : 'w-64');
+                }
+
+                setSidebarToggleIcon();
             }
         }
 
         window.addEventListener('resize', updateLayout);
         updateLayout(); // Initial call
+        setSidebarToggleIcon();
 
-        toggleBtn.addEventListener('click', function() {
-            if (isMobile) {
-                sidebar.classList.toggle('hidden');
-            } else {
+        if (desktopToggleBtn) {
+            desktopToggleBtn.addEventListener('click', function() {
+                if (isMobile) return;
+
                 isCollapsed = !isCollapsed;
 
                 if (isCollapsed) {
                     sidebar.classList.remove('w-64');
-                    sidebar.classList.add('w-16');
-                    header.classList.remove('left-64');
-                    header.classList.add('left-16');
-                    hrLine.classList.remove('left-64');
-                    hrLine.classList.add('left-16');
-                    mainContent.classList.remove('ml-64');
-                    mainContent.classList.add('ml-16');
-                    logoText.classList.add('hidden');
-                    // Hide text in menu items
-                    document.querySelectorAll('#sidebar nav a span:not(.hidden), #sidebar nav button span:not(.hidden)').forEach(span => {
-                        span.classList.add('hidden');
+                    sidebar.classList.add('w-24');
+                    if (header) {
+                        header.classList.remove('left-64');
+                        header.classList.add('left-24');
+                    }
+                    if (hrLine) {
+                        hrLine.classList.remove('left-64');
+                        hrLine.classList.add('left-24');
+                    }
+                    if (mainContent) {
+                        mainContent.classList.remove('ml-64');
+                        mainContent.classList.add('ml-24');
+                    }
+                    // Hide only the text labels, keep icons visible
+                    document.querySelectorAll('#sidebar .sidebar-label').forEach(label => {
+                        label.classList.add('hidden');
                     });
                 } else {
-                    sidebar.classList.remove('w-16');
+                    sidebar.classList.remove('w-24');
                     sidebar.classList.add('w-64');
-                    header.classList.remove('left-16');
-                    header.classList.add('left-64');
-                    hrLine.classList.remove('left-16');
-                    hrLine.classList.add('left-64');
-                    mainContent.classList.remove('ml-16');
-                    mainContent.classList.add('ml-64');
-                    logoText.classList.remove('hidden');
-                    // Show text in menu items
-                    document.querySelectorAll('#sidebar nav a span.hidden, #sidebar nav button span.hidden').forEach(span => {
-                        span.classList.remove('hidden');
+                    if (header) {
+                        header.classList.remove('left-24');
+                        header.classList.add('left-64');
+                    }
+                    if (hrLine) {
+                        hrLine.classList.remove('left-24');
+                        hrLine.classList.add('left-64');
+                    }
+                    if (mainContent) {
+                        mainContent.classList.remove('ml-24');
+                        mainContent.classList.add('ml-64');
+                    }
+                    // Show the labels again
+                    document.querySelectorAll('#sidebar .sidebar-label.hidden').forEach(label => {
+                        label.classList.remove('hidden');
                     });
                 }
-            }
-        });
+
+                setSidebarToggleIcon();
+            });
+        }
+
+        if (mobileToggleBtn) {
+            mobileToggleBtn.addEventListener('click', function() {
+                if (!isMobile) return;
+                sidebar.classList.remove('w-24');
+                sidebar.classList.add('w-64');
+                sidebar.classList.toggle('hidden');
+            });
+        }
 
         // User dropdown toggle functionality
         const userDropdownToggle = document.getElementById('userDropdownToggle');
         const userDropdown = document.getElementById('userDropdown');
 
-        userDropdownToggle.addEventListener('click', function(event) {
-            event.stopPropagation();
-            userDropdown.classList.toggle('hidden');
-        });
+        if (userDropdownToggle && userDropdown) {
+            userDropdownToggle.addEventListener('click', function(event) {
+                event.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!userDropdownToggle.contains(event.target) && !userDropdown.contains(event.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        });
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!userDropdownToggle.contains(event.target) && !userDropdown.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
     </script>
 
     <!-- Footer -->

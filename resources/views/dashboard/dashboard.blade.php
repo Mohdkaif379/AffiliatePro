@@ -1,23 +1,31 @@
 @extends('layout.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-900 p-4 md:p-6">
+<div class="min-h-screen rounded-3xl bg-slate-50 p-4 md:p-6">
 
     <!-- Heading -->
-    <h1 class="text-3xl font-bold text-yellow-500 mb-6 flex items-center gap-2">
-        <i class="fa fa-chart-line"></i> Dashboard Analytics
-    </h1>
+    <div class="mb-6 flex items-center justify-between gap-4">
+        <div>
+            <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                    <i class="fa fa-chart-line"></i>
+                </span>
+                Dashboard Analytics
+            </h1>
+            <p class="mt-2 text-sm text-slate-500">Overview of clicks, views and conversions.</p>
+        </div>
+    </div>
 
     <!-- Filter Card -->
-    <div class="bg-gray-800 p-3 md:p-4 rounded-xl shadow mb-6">
+    <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <form method="GET" action="{{ route('dashboard') }}"
-              class="flex flex-col md:flex-row gap-4 items-center">
+              class="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-end">
 
-            <span class="text-white font-semibold">Filter Report</span>
+            <span class="font-semibold text-slate-700">Filter Report</span>
 
             <!-- Dropdown Filter -->
             <select name="filter"
-                class="bg-gray-600 text-yellow-400 border border-yellow-500 p-2 rounded-lg">
+                class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700 outline-none transition focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200">
                 <option value="today" {{ $filter=='today'?'selected':'' }}>Today</option>
                 <option value="weekly" {{ $filter=='weekly'?'selected':'' }}>Weekly</option>
                 <option value="monthly" {{ $filter=='monthly'?'selected':'' }}>Monthly</option>
@@ -27,47 +35,47 @@
             <!-- From Date -->
             <input type="date" name="from_date"
                    value="{{ $fromDate ?? '' }}"
-                   class="bg-gray-600 text-yellow-400 border border-yellow-500 p-2 rounded-lg">
+                   class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700 outline-none transition focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200">
 
             <!-- To Date -->
             <input type="date" name="to_date"
                    value="{{ $toDate ?? '' }}"
-                   class="bg-gray-600 text-yellow-400 border border-yellow-500 p-2 rounded-lg">
+                   class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700 outline-none transition focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200">
 
             <!-- Submit Button -->
             <button type="submit"
-                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold">
+                class="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:bg-slate-800">
                 Apply
             </button>
 
             <!-- Reset Button -->
-            <a href="{{ route('dashboard') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold">Reset</a>
+            <a href="{{ route('dashboard') }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50">Reset</a>
         </form>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
 
-        <div class="bg-gradient-to-r from-green-600 to-green-400 p-4 md:p-5 rounded-xl shadow text-white">
-            <h3 class="text-lg">Total Clicks</h3>
-            <p class="text-3xl font-bold">{{ $clickCount }}</p>
+        <div class="rounded-2xl border border-emerald-100 bg-white p-4 md:p-5 shadow-sm">
+            <h3 class="text-sm font-medium text-slate-500">Total Clicks</h3>
+            <p class="mt-2 text-3xl font-bold text-emerald-600">{{ $clickCount }}</p>
         </div>
 
-        <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-4 md:p-5 rounded-xl shadow text-white">
-            <h3 class="text-lg">Total Views</h3>
-            <p class="text-3xl font-bold">{{ $viewCount }}</p>
+        <div class="rounded-2xl border border-blue-100 bg-white p-4 md:p-5 shadow-sm">
+            <h3 class="text-sm font-medium text-slate-500">Total Views</h3>
+            <p class="mt-2 text-3xl font-bold text-blue-600">{{ $viewCount }}</p>
         </div>
 
-        <div class="bg-gradient-to-r from-purple-600 to-purple-400 p-4 md:p-5 rounded-xl shadow text-white">
-            <h3 class="text-lg">Total Conversions</h3>
-            <p class="text-3xl font-bold">{{ $conversionCount }}</p>
+        <div class="rounded-2xl border border-violet-100 bg-white p-4 md:p-5 shadow-sm">
+            <h3 class="text-sm font-medium text-slate-500">Total Conversions</h3>
+            <p class="mt-2 text-3xl font-bold text-violet-600">{{ $conversionCount }}</p>
         </div>
 
     </div>
 
     <!-- Chart Card -->
-    <div class="bg-gray-800 p-4 md:p-6 rounded-xl shadow">
-        <h2 class="text-xl font-semibold text-yellow-400 mb-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6 shadow-sm">
+        <h2 class="mb-4 text-xl font-semibold text-slate-900">
             Clicks vs Views vs Conversions
         </h2>
         <canvas id="lineChart" height="120"></canvas>
@@ -126,19 +134,19 @@ new Chart(ctx, {
         plugins: {
             legend: {
                 labels: {
-                    color: 'white',
+                    color: '#334155',
                     font: { size: 14 }
                 }
             }
         },
         scales: {
             x: {
-                ticks: { color: 'white' },
-                grid: { color: '#374151' }
+                ticks: { color: '#64748b' },
+                grid: { color: '#e2e8f0' }
             },
             y: {
-                ticks: { color: 'white' },
-                grid: { color: '#374151' }
+                ticks: { color: '#64748b' },
+                grid: { color: '#e2e8f0' }
             }
         }
     }

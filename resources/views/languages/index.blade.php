@@ -1,73 +1,77 @@
 @extends('layout.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-900 p-8 shadow-xl">
+<div class="min-h-screen bg-slate-50 px-4 py-10">
+    <div class="mx-auto w-full max-w-6xl rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,0.12)] sm:p-8">
+        <div class="mb-6 flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">
+                    All Languages
+                </h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    Manage language records in a clean light layout.
+                </p>
+            </div>
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6 p-4 border-b-2 border-yellow-600">
-        <h1 class="text-3xl text-white font-bold">
-            All Languages
-        </h1>
-
-        <a href="{{ route('languages.create') }}"
-           class="bg-yellow-600 text-black px-6 py-2 font-bold hover:bg-yellow-500 shadow">
-            + Create Language
-        </a>
-    </div>
-
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="bg-green-400 text-black p-3 rounded mb-4 text-center font-semibold shadow">
-            {{ session('success') }}
+            <a href="{{ route('languages.create') }}"
+               class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 hover:shadow-lg">
+                + Create Language
+            </a>
         </div>
-    @endif
 
-    <!-- Languages Table -->
-    <div class="overflow-x-auto rounded-lg shadow-2xl">
-        <table class="w-full table-auto text-white text-sm border-collapse">
-            <thead class="bg-gray-800 text-yellow-600 uppercase">
-                <tr>
-                    <th class="px-4 py-3 text-center">Sr No.</th>
-                    <th class="px-4 py-3">Language Name</th>
-                    <th class="px-4 py-3">Language Code</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
-                </tr>
-            </thead>
+        @if(session('success'))
+            <div class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-center font-semibold text-emerald-700">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            <tbody>
-                @forelse($languages as $language)
-                <tr class="border-b border-gray-700 hover:bg-gray-800 transition">
-                    <td class="px-4 py-2 text-center text-gray-400">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-2 font-semibold">{{ $language->name }}</td>
-                    <td class="px-4 py-2 text-gray-300">{{ $language->code ?? '-' }}</td>
-                    <td class="px-4 py-2">
-                        <div class="flex justify-center gap-3">
-                            <a href="{{ route('languages.edit', $language->id) }}"
-                               class="bg-yellow-600 text-black px-4 py-1 rounded font-semibold hover:bg-yellow-500">
-                                Edit
-                            </a>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full table-auto border-collapse text-sm">
+                <thead class="bg-slate-100 text-slate-700">
+                    <tr>
+                        <th class="px-4 py-3 text-center font-semibold uppercase tracking-wide">Sr No.</th>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide">Language Name</th>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-wide">Language Code</th>
+                        <th class="px-4 py-3 text-center font-semibold uppercase tracking-wide">Actions</th>
+                    </tr>
+                </thead>
 
-                            <form action="{{ route('languages.destroy', $language->id) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Delete this language?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="bg-red-600 text-white px-4 py-1 rounded font-semibold hover:bg-red-500">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="text-center py-6 text-yellow-400">No languages found.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                <tbody class="divide-y divide-slate-200 bg-white">
+                    @forelse($languages as $language)
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-4 text-center text-slate-500">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-4 font-semibold text-slate-900">{{ $language->name }}</td>
+                        <td class="px-4 py-4 text-slate-600">{{ $language->code ?? '-' }}</td>
+                        <td class="px-4 py-4">
+                            <div class="flex justify-center gap-3">
+                                <a href="{{ route('languages.edit', $language->id) }}"
+                                   class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50">
+                                    Edit
+                                </a>
+
+                                <form action="{{ route('languages.destroy', $language->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Delete this language?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2 font-semibold text-white transition hover:bg-rose-500">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-slate-500">
+                            No languages found.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
 @endsection

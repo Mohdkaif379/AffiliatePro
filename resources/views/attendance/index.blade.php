@@ -1,26 +1,32 @@
 @extends('layout.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto mt-10 p-6">
+<div class="mx-auto mt-6 max-w-7xl rounded-3xl bg-slate-50 p-4 md:p-6">
 
-    <h1 class="text-3xl font-bold mb-6 text-yellow-400 flex items-center gap-2">
-        <i class="fas fa-calendar-check"></i> Attendance
-    </h1>
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-200 pb-4">
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
+            <i class="fas fa-calendar-check"></i>
+        </span>
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">Attendance</h1>
+            <p class="mt-1 text-sm text-slate-500">Mark in/out and review attendance history.</p>
+        </div>
+    </div>
 
     <!-- Success / Error Messages -->
     @if(session('success'))
-    <div class="mb-4 p-3 bg-green-300 text-white rounded shadow">
+    <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-700 shadow-sm">
         {{ session('success') }}
     </div>
     @endif
     @if(session('error'))
-    <div class="mb-4 p-3 bg-red-500 text-white rounded shadow">
+    <div class="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-rose-700 shadow-sm">
         {{ session('error') }}
     </div>
     @endif
 
     <!-- Single Mark In / Mark Out Buttons -->
-    <div class="mb-6 flex gap-4 items-center">
+    <div class="mb-6 flex items-center gap-4">
 
         @php
         $todayAttendance = $attendances->where('today_date', \Carbon\Carbon::today('Asia/Kolkata')->toDateString())
@@ -31,7 +37,7 @@
         {{-- Mark In Button --}}
         <a href="{{ $todayAttendance ? '#' : route('attendance.markin') }}">
             <button
-                class="px-6 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-lg transition shadow disabled:opacity-50 disabled:cursor-not-allowed hover:bg-yellow-500"
+                class="rounded-xl bg-slate-900 px-6 py-2 font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                 @if($todayAttendance) disabled @endif>
                 <i class="fa-solid fa-sign-in-alt mr-1"></i> Mark In
             </button>
@@ -40,131 +46,129 @@
         {{-- Mark Out Button --}}
         <a href="{{ $todayAttendance && !$todayAttendance->mark_out_time ? route('attendance.markout', $todayAttendance->id) : '#' }}">
             <button
-                class="px-6 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-lg transition shadow disabled:opacity-50 disabled:cursor-not-allowed hover:bg-yellow-500"
-                @if(!$todayAttendance || $todayAttendance->mark_out_time) disabled @endif
-                >
+                class="rounded-xl bg-white px-6 py-2 font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                @if(!$todayAttendance || $todayAttendance->mark_out_time) disabled @endif>
                 <i class="fa-solid fa-clock mr-1"></i> Mark Out
             </button>
         </a>
 
     </div>
 
-
     <!-- Attendance Table -->
-    <div class="overflow-x-auto border border-yellow-600 rounded-lg shadow-lg">
+    <div class="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
         <div class="max-h-[500px] overflow-y-auto">
-            <table class="min-w-full bg-gray-900 text-sm">
-                <thead class="sticky top-0 bg-gray-800 z-10">
-                    <tr class="text-yellow-400 uppercase text-xs tracking-wider">
-                        <th class="px-4 py-3 border-b">ID</th>
-                        <th class="px-4 py-3 border-b">Employee Name</th>
-                        <th class="px-4 py-3 border-b">Mark In</th>
-                        <th class="px-4 py-3 border-b">Mark Out</th>
-                        <th class="px-4 py-3 border-b">Date</th>
-                        <th class="px-4 py-3 border-b">Status</th>
-                        <th class="px-4 py-3 border-b">Early Leaving</th>
-                        <th class="px-4 py-3 border-b">Overtime</th>
-                        <th class="px-4 py-3 border-b">Working Hours</th>
-                        <th class="px-4 py-3 border-b text-center">Actions</th>
+            <table class="min-w-full text-sm text-slate-700">
+                <thead class="sticky top-0 z-10 bg-slate-50">
+                    <tr class="text-xs uppercase tracking-wider text-slate-500">
+                        <th class="px-4 py-3 border-b border-slate-200">ID</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Employee Name</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Mark In</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Mark Out</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Date</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Status</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Early Leaving</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Overtime</th>
+                        <th class="px-4 py-3 border-b border-slate-200">Working Hours</th>
+                        <th class="px-4 py-3 border-b border-slate-200 text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100">
                     @foreach($attendances as $att)
-                    <tr class="hover:bg-gray-800 transition text-white">
-             <td class="px-4 py-2 border-b">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-2 border-b">{{ $att->user->full_name }}</td>
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="px-4 py-3">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-3 font-medium text-slate-900">{{ $att->user->full_name }}</td>
 
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             {{ $att->mark_in_time ? \Carbon\Carbon::parse($att->mark_in_time)->format('h:i A') : '-' }}
                         </td>
 
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             {{ $att->mark_out_time ? \Carbon\Carbon::parse($att->mark_out_time)->format('h:i A') : 'Not Marked' }}
                         </td>
 
-                        <td class="px-4 py-2 border-b">{{ $att->today_date }}</td>
+                        <td class="px-4 py-3">{{ $att->today_date }}</td>
 
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             @if($att->status == 'Present')
-                            <span class="px-3 py-1 rounded-full bg-yellow-200 text-yellow-900 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                                 {{ $att->status }}
                             </span>
                             @elseif($att->status == 'Halfday')
-                            <span class="px-3 py-1 rounded-full bg-yellow-400 text-gray-900 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                                 {{ $att->status }}
                             </span>
                             @elseif($att->status == 'Absent')
-                            <span class="px-3 py-1 rounded-full bg-gray-300 text-gray-800 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
                                 {{ $att->status }}
                             </span>
                             @elseif($att->status == 'Leave')
-                            <span class="px-3 py-1 rounded-full bg-red-200 text-red-800 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700">
                                 {{ $att->status }}
                             </span>
                             @elseif($att->status == 'Holiday')
-                            <span class="px-3 py-1 rounded-full bg-blue-200 text-blue-800 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                                 {{ $att->status }}
                             </span>
                             @endif
                         </td>
 
                         {{-- Early Leaving --}}
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             @if($att->mark_out_time)
                             @php
                             $markOut = \Carbon\Carbon::parse($att->mark_out_time);
                             $officeEnd = \Carbon\Carbon::parse($att->today_date.' 18:30:00');
 
                             if($markOut->lt($officeEnd)){
-                            $earlyMinutes = $markOut->diffInMinutes($officeEnd);
-                            $h = intdiv($earlyMinutes, 60);
-                            $m = $earlyMinutes % 60;
+                                $earlyMinutes = $markOut->diffInMinutes($officeEnd);
+                                $h = intdiv($earlyMinutes, 60);
+                                $m = $earlyMinutes % 60;
                             }
                             @endphp
 
                             @if(isset($earlyMinutes) && $earlyMinutes > 0)
-                            <span class="px-2 py-1 rounded bg-gray-800 text-yellow-400 text-xs">
+                            <span class="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
                                 Early by {{ $h }}h {{ $m }}m
                             </span>
                             @else
-                            <span class="text-green-500 font-semibold text-xs">
+                            <span class="text-xs font-semibold text-emerald-600">
                                 On Time
                             </span>
                             @endif
                             @else
-                            <span class="text-gray-400 text-xs">Not Marked Out</span>
+                            <span class="text-xs text-slate-400">Not Marked Out</span>
                             @endif
                         </td>
 
                         {{-- Overtime --}}
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             @if($att->mark_out_time)
                             @php
                             $markOut = \Carbon\Carbon::parse($att->mark_out_time);
                             $officeEnd = \Carbon\Carbon::parse($att->today_date.' 18:30:00');
 
                             if($markOut->gt($officeEnd)){
-                            $overtimeMinutes = $officeEnd->diffInMinutes($markOut);
-                            $oh = intdiv($overtimeMinutes, 60);
-                            $om = $overtimeMinutes % 60;
+                                $overtimeMinutes = $officeEnd->diffInMinutes($markOut);
+                                $oh = intdiv($overtimeMinutes, 60);
+                                $om = $overtimeMinutes % 60;
                             }
                             @endphp
 
                             @if(isset($overtimeMinutes) && $overtimeMinutes > 0)
-                            <span class="flex items-center gap-1 text-green-500 font-semibold text-xs">
+                            <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">
                                 <i class="fa-solid fa-clock-rotate-left"></i>
                                 Overtime {{ $oh }}h {{ $om }}m
                             </span>
                             @else
-                            <span class="text-gray-400 text-xs">N/A</span>
+                            <span class="text-xs text-slate-400">N/A</span>
                             @endif
                             @else
-                            <span class="text-gray-400 text-xs">Not Marked Out</span>
+                            <span class="text-xs text-slate-400">Not Marked Out</span>
                             @endif
                         </td>
 
                         {{-- Working Hours --}}
-                        <td class="px-4 py-2 border-b">
+                        <td class="px-4 py-3">
                             @if($att->mark_in_time && $att->mark_out_time)
                             @php
                             $markIn = \Carbon\Carbon::parse($att->mark_in_time);
@@ -175,27 +179,26 @@
                             $wm = $totalMinutes % 60;
                             @endphp
 
-                            <span class="px-2 py-1 rounded bg-gray-800 text-yellow-400 text-xs font-semibold">
+                            <span class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
                                 {{ $wh }}h {{ $wm }}m
                             </span>
                             @else
-                            <span class="text-gray-400 text-xs">Not Completed</span>
+                            <span class="text-xs text-slate-400">Not Completed</span>
                             @endif
                         </td>
 
                         {{-- Actions --}}
-                        <td class="px-4 py-2 border-b text-center">
+                        <td class="px-4 py-3 text-center">
                             <form action="{{ route('attendance.destroy', $att->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
                                     onclick="return confirm('Delete this attendance?')"
-                                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition shadow">
+                                    class="rounded-xl bg-rose-600 px-3 py-1 text-white shadow-sm transition hover:bg-rose-500">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </td>
-
                     </tr>
                     @endforeach
                 </tbody>
